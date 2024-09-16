@@ -1,49 +1,81 @@
 <template>
   <div class="container">
-    <h1>To-Do List</h1>
-    <input v-model="newTask" placeholder="New Task" />
-    <button @click="addTask">Add Task</button>
-    <ul>
-      <li v-for="(task, index) in tasks" :key="index">
-        {{ task }}
-      </li>
-    </ul>
+    <h1>Countdown Timer</h1>
+    <div id="timerDisplay">{{ timer }}</div>
+    <input type="number" v-model="minutes" placeholder="Minutes" />
+    <button @click="startTimer">Start</button>
+    <button @click="resetTimer">Reset</button>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue';
 
-const newTask = ref('');
-const tasks = ref([]);
+const timer = ref('00:00:00');
+const minutes = ref(0);
+let timerInterval = null;
 
-const addTask = () => {
-  if (newTask.value.trim()) {
-    tasks.value.push(newTask.value.trim());
-    newTask.value = '';
+const startTimer = () => {
+  if (minutes.value > 0) {
+    let timeLeft = minutes.value * 60;
+    timerInterval = setInterval(() => {
+      const mins = Math.floor(timeLeft / 60);
+      const secs = timeLeft % 60;
+      timer.value = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+      timeLeft--;
+      if (timeLeft < 0) {
+        clearInterval(timerInterval);
+        timer.value = '00:00:00';
+      }
+    }, 1000);
   }
+};
+
+const resetTimer = () => {
+  clearInterval(timerInterval);
+  timer.value = '00:00:00';
 };
 </script>
 
-<style>
+<style scoped>
+/* Add a border and some padding */
 .container {
-  width: 300px;
-  margin: 0 auto;
+    border: 2px solid #007BFF;
+    padding: 30px;
+    border-radius: 10px;
+    text-align: center;
 }
 
-input, button {
-  margin: 10px 0;
-  padding: 8px;
+/* Style the timer display */
+#timerDisplay {
+    font-size: 24px;
+    margin-top: 20px;
+    color: #FF5733;
 }
 
-ul {
-  list-style-type: none;
-  padding: 0;
+/* Style the input field */
+input[type="number"] {
+    padding: 8px;
+    font-size: 16px;
+    width: 80px;
+    text-align: center;
+    margin-right: 10px; /* Space between input and button */
 }
 
-li {
-  background: #f0f0f0;
-  margin: 5px 0;
-  padding: 10px;
+/* Style the buttons */
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    margin: 5px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #007BFF;
+    color: white;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
 }
 </style>
