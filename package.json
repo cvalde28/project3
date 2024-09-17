@@ -15,6 +15,6 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.1.2",
     "vite": "^5.4.1",
-    "gh-pages": "^5.0.0"  // Add this for GitHub Pages deployment
+    "gh-pages": "^5.0.0"
   }
 }
